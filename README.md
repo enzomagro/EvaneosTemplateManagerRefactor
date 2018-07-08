@@ -19,7 +19,7 @@ For instance, "quote_summary" and "quote_summary_html" can be calculated separat
 The further modifications will be easer and safer.
 
 4) The previous point allow to test each method in itself. So for the unit tests this is a major improvement. 
-I've also added to test case in the "TemplateManagerTest" :
+I've also added two test cases in the "TemplateManagerTest" :
 especially the "setUser" shows this principle. Of course, all the other methods have to been tested,
 but for the purpose of the test, this is enough.
 
