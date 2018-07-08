@@ -9,7 +9,19 @@
     },
 	"autoload": {
         "files": [
-            "src/Config/PatternToReplace.php"
+			"src/TemplateManager.php",
+            "src/Config/PatternToReplace.php",
+			"src/Entity/Quote.php",
+			"src/Entity/Destination.php",
+			"src/Entity/Site.php",
+			"src/Entity/Template.php",
+			"src/Entity/User.php",
+			"src/Helper/SingletonTrait.php",
+			"src/Context/ApplicationContext.php",
+			"src/Repository/Repository.php",
+			"src/Repository/SiteRepository.php",
+			"src/Repository/DestinationRepository.php",
+			"src/Repository/QuoteRepository.php"
         ]
     }
 }
