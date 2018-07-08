@@ -10,7 +10,7 @@
 	"autoload": {
         "files": [
 			"src/TemplateManager.php",
-            "src/Config/PatternToReplace.php",
+            		"src/Config/PatternToReplace.php",
 			"src/Entity/Quote.php",
 			"src/Entity/Destination.php",
 			"src/Entity/Site.php",
