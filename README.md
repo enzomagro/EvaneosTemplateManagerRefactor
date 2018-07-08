@@ -9,7 +9,7 @@ their structure  is the same. So the algorithm that replaces the place-holders d
 2) The list of place-holders is scalable. 
 So I've added a configuration class that contains them.
 The "TemplateManager" needs only to call the key of the related array-value,
-instead the place-holder patter directly.
+instead the place-holder pattern directly.
 THE PRINCIPLE IS : the place-holder pattern remains scalable and modifiable 
 without changing the code directly in the class.
 
@@ -24,6 +24,6 @@ especially the "setUser" shows this principle. Of course, all the other methods 
 but for the purpose of the test, this is enough.
 
 5) Name-spaces and auto-load have been introduced : 
-this is only a suggestion to avoid the "deprecated" include_once instructions.
-composer.json file can do the job and centralize all the autoloaded files and classes
+this is ONLY a suggestion to avoid the "deprecated" include_once instructions.
+==> composer.json file can do the job and centralize all the autoloaded files and classes
   
