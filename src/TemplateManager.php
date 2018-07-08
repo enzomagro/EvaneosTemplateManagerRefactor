@@ -1,74 +1,58 @@
 <?php
 
+use EvaneosTemplateManager\src\Config\PatternToReplace;
+
+/**
+ * class Template Manager
+ */
 class TemplateManager
 {
+    /**
+     * @var Template
+     */
+	private $_template;
+
+	/**
+     * @var array
+     */
+	private $_data;
+
+	/**
+     * Compute the template content
+	 * @param Template $tpl
+	 * @param array $data
+	 * @return Template
+     */
     public function getTemplateComputed(Template $tpl, array $data)
     {
-        if (!$tpl) {
-            throw new \RuntimeException('no tpl given');
-        }
-
-        $replaced = clone($tpl);
-        $replaced->subject = $this->computeText($replaced->subject, $data);
-        $replaced->content = $this->computeText($replaced->content, $data);
-
-        return $replaced;
+		try{
+			$this->_template = $tpl;
+			$this->_data = $data;
+			$this->_template->subject = $this->_computeText($this->_template->subject);
+			$this->_template->content = $this->_computeText($this->_template->content);
+			return $this->_template;
+		} catch (Exception $e){
+			echo ' An error has occurs : <b>' . $e->getMessage() . '</b>';
+		}
     }
-
-    private function computeText($text, array $data)
+	
+	/**
+     * Compute the content text of the template object
+	 * @param string $text
+	 * @return string
+	 * @throws Exception
+     */
+	private function _computeText($text)
     {
-        $APPLICATION_CONTEXT = ApplicationContext::getInstance();
-
-        $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
-
-        if ($quote)
-        {
-            $_quoteFromRepository = QuoteRepository::getInstance()->getById($quote->id);
-            $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
-            $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
-
-            if(strpos($text, '[quote:destination_link]') !== false){
-                $destination = DestinationRepository::getInstance()->getById($quote->destinationId);
-            }
-
-            $containsSummaryHtml = strpos($text, '[quote:summary_html]');
-            $containsSummary     = strpos($text, '[quote:summary]');
-
-            if ($containsSummaryHtml !== false || $containsSummary !== false) {
-                if ($containsSummaryHtml !== false) {
-                    $text = str_replace(
-                        '[quote:summary_html]',
-                        Quote::renderHtml($_quoteFromRepository),
-                        $text
-                    );
-                }
-                if ($containsSummary !== false) {
-                    $text = str_replace(
-                        '[quote:summary]',
-                        Quote::renderText($_quoteFromRepository),
-                        $text
-                    );
-                }
-            }
-
-            (strpos($text, '[quote:destination_name]') !== false) and $text = str_replace('[quote:destination_name]',$destinationOfQuote->countryName,$text);
+		// Is a choice to require the Quote object to display the message 
+        if (!isset($this->_data['quote']) || $this->_data['quote'] instanceof Quote === false){
+			throw new \Exception ('quote place-holders are mandatory !');
         }
-
-        if (isset($destination))
-            $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destination->countryName . '/quote/' . $_quoteFromRepository->id, $text);
-        else
-            $text = str_replace('[quote:destination_link]', '', $text);
-
-        /*
-         * USER
-         * [user:*]
-         */
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
-        if($_user) {
-            (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($_user->firstname)), $text);
-        }
-
-        return $text;
+		$this->setContainsSummary($text);
+		$this->setDestinationName($text);
+		$this->setDestinationLink($text);
+		$this->setUser($text);
+		return $text;
     }
 
 	/**

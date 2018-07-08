@@ -1,5 +1,7 @@
 <?php
 
+namespace EvaneosTemplateManager\src\Config;
+
 class PatternToReplace 
 {
 	static $patternToReplace = [
